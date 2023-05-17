@@ -1,0 +1,49 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model TransactionType {
+    id          Int          @id @default(autoincrement())
+    type        String       @unique
+    Transaction Transaction?
+}
+
+model Tag {
+    id           Int           @id @default(autoincrement())
+    name         String        @unique
+    transactions Transaction[]
+}
+
+model Transaction {
+    id                    Int                  @id @default(autoincrement())
+    description           String
+    date                  DateTime
+    transactionType       TransactionType      @relation(fields: [transactionTypeId], references: [id])
+    transactionTypeId     Int                  @unique
+    tags                  Tag[]
+    TransactionOccasion   TransactionOccasion? @relation(fields: [TransactionOccasionId], references: [id])
+    TransactionOccasionId Int?                 @unique
+}
+
+model TransactionOccasion {
+    id          Int          @id @default(autoincrement())
+    name        String       @unique
+    Transaction Transaction?
+}
+
+model Account {
+    id            Int         @id @default(autoincrement())
+    accountType   AccountType @relation(fields: [accountTypeId], references: [id])
+    accountTypeId Int         @unique
+}
+
+model AccountType {
+    id      Int      @id @default(autoincrement())
+    type    String   @unique
+    Account Account?
+}
