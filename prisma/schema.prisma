@@ -8,9 +8,9 @@ datasource db {
 }
 
 model TransactionType {
-    id          Int          @id @default(autoincrement())
-    type        String       @unique
-    Transaction Transaction?
+    id           Int           @id @default(autoincrement())
+    type         String        @unique
+    Transactions Transaction[]
 }
 
 model Tag {
@@ -21,13 +21,14 @@ model Tag {
 
 model Transaction {
     id                    Int                  @id @default(autoincrement())
+    amount                Decimal              @default(0) @db.Decimal(19, 4)
     description           String
     date                  DateTime
     transactionType       TransactionType      @relation(fields: [transactionTypeId], references: [id])
-    transactionTypeId     Int                  @unique
+    transactionTypeId     Int
     tags                  Tag[]
-    TransactionOccasion   TransactionOccasion? @relation(fields: [TransactionOccasionId], references: [id])
-    TransactionOccasionId Int?                 @unique
+    TransactionOccasion   TransactionOccasion? @relation(fields: [transactionOccasionId], references: [id])
+    transactionOccasionId Int?                 @unique
 }
 
 model TransactionOccasion {
@@ -38,6 +39,7 @@ model TransactionOccasion {
 
 model Account {
     id            Int         @id @default(autoincrement())
+    name          String
     accountType   AccountType @relation(fields: [accountTypeId], references: [id])
     accountTypeId Int         @unique
 }

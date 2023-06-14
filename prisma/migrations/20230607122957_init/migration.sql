@@ -19,26 +19,29 @@ CREATE TABLE `Tag` (
 -- CreateTable
 CREATE TABLE `Transaction` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `amount` DECIMAL(19, 4) NOT NULL DEFAULT 0,
+    `description` VARCHAR(191) NOT NULL,
+    `date` DATETIME(3) NOT NULL,
     `transactionTypeId` INTEGER NOT NULL,
-    `transactionGroupId` INTEGER NOT NULL,
+    `transactionOccasionId` INTEGER NULL,
 
-    UNIQUE INDEX `Transaction_transactionTypeId_key`(`transactionTypeId`),
-    UNIQUE INDEX `Transaction_transactionGroupId_key`(`transactionGroupId`),
+    UNIQUE INDEX `Transaction_transactionOccasionId_key`(`transactionOccasionId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `TransactionGroup` (
+CREATE TABLE `TransactionOccasion` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `TransactionGroup_name_key`(`name`),
+    UNIQUE INDEX `TransactionOccasion_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Account` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
     `accountTypeId` INTEGER NOT NULL,
 
     UNIQUE INDEX `Account_accountTypeId_key`(`accountTypeId`),
@@ -67,7 +70,7 @@ CREATE TABLE `_TagToTransaction` (
 ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_transactionTypeId_fkey` FOREIGN KEY (`transactionTypeId`) REFERENCES `TransactionType`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_transactionGroupId_fkey` FOREIGN KEY (`transactionGroupId`) REFERENCES `TransactionGroup`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_transactionOccasionId_fkey` FOREIGN KEY (`transactionOccasionId`) REFERENCES `TransactionOccasion`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Account` ADD CONSTRAINT `Account_accountTypeId_fkey` FOREIGN KEY (`accountTypeId`) REFERENCES `AccountType`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

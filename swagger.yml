@@ -7,6 +7,116 @@ servers:
 paths:
   /transactions:
     get:
+      tags:
+        - transactions
+      summary: Get all transactions.
       responses:
         '200':
           description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+    post:
+      tags:
+        - transactions
+      summary: Create a transaction.
+      requestBody:
+        description: Transaction object
+        required: true
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Created new transaction.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Transaction'
+  /transactions/{transactionId}:
+    get:
+      tags:
+        - transactions
+      parameters:
+        - name: transactionId
+          in: path
+          description: ID of transaction.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Transaction'
+    put:
+      tags:
+        - transactions
+      parameters:
+        - name: transactionId
+          in: path
+          description: ID of transaction.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Transaction object
+        required: true
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Updated existing transaction
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Transaction'
+components:
+  schemas:
+    Transaction:
+      type: object
+      description: Transaction.
+      required:
+        - id
+        - amount
+        - description
+        - date
+        - transactionTypeId
+        - tags
+      properties:
+        id:
+          type: integer
+          description: Unique ID of the transaction
+          example: 1
+        amount:
+          type: number
+          example: 15.01
+        description:
+          type: string
+          example: Bought wings at Buffalo Wild Wings
+        date:
+          type: string
+          description: Use date format
+          example: 06/01/2023
+        transactionTypeId:
+          type: integer
+          description: The ID of the type of transaction
+          example: 1
+        tags:
+          type: array
+          items:
+            type: string
+          description: The list of tags the transaction is associated with
+          example: ['food']
+        transactionOccasionId:
+          type: integer
+          description: The ID of the transaction occasion
+          example: 1

@@ -1,4 +1,4 @@
-import prisma from '.';
+import prisma from '../db';
 
 const seed = async () => {
     await prisma.transactionType.createMany({
