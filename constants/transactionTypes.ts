@@ -1,0 +1,8 @@
+const TRANSACTION_TYPES = {
+    INCOME: 1,
+    EXPENSE: 2,
+    INVESTMENT: 3,
+    TRANSFER: 4,
+};
+
+export default TRANSACTION_TYPES;

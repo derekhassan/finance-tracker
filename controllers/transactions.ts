@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db';
 import { startOfMonth, lastDayOfMonth } from 'date-fns';
+import { TRANSACTION_TYPES } from '../constants';
+import occasions from './occasions';
 
 interface CreateTransactionRequest {
     transactionTypeId: number;
@@ -33,6 +35,7 @@ interface AddTransactionRequestQuery {
     tags?: string[];
     month?: string;
     year?: string;
+    transactionOccasionId?: string;
 }
 
 const getTransactions = async (
@@ -140,7 +143,7 @@ const createTransaction = async (
 ) => {
     try {
         const {
-            transactionTypeId = 1,
+            transactionTypeId = TRANSACTION_TYPES.INCOME,
             date,
             transactionOccasionId,
             description = '',
@@ -312,6 +315,7 @@ const addTransactions = async (
             tags = [],
             month = '',
             year = '',
+            transactionOccasionId = '',
         } = req.query as AddTransactionRequestQuery;
 
         const monthDate = new Date(
@@ -341,6 +345,13 @@ const addTransactions = async (
                               gte: firstDateOfMonth,
                               lte: lastDateOfMonth,
                           },
+                      }
+                    : {}),
+                ...(transactionOccasionId && parseInt(transactionOccasionId)
+                    ? {
+                          transactionOccasionId: parseInt(
+                              transactionOccasionId
+                          ),
                       }
                     : {}),
             },
